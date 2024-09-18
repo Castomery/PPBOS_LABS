@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "PPBOS_LAB1/1.0.0": {
+        "runtime": {
+          "PPBOS_LAB1.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PPBOS_LAB1/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
