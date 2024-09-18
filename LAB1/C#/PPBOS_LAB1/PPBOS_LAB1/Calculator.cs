@@ -18,7 +18,6 @@ namespace PPBOS_LAB1
 
         public long GetSumByThreads(int countOfThreads)
         {
-            Stopwatch stopwatch = new Stopwatch();
             
             long totalSum = 0;
             long[] partialSum = new long[countOfThreads];
@@ -27,7 +26,6 @@ namespace PPBOS_LAB1
 
             Thread[] threads = new Thread[countOfThreads];
 
-            stopwatch.Start();
             for (int i = 0; i < countOfThreads; i++)
             {
                 int start = i * chunkSize;
@@ -44,7 +42,6 @@ namespace PPBOS_LAB1
                 totalSum += partialSum[i];
             }
 
-            stopwatch.Stop();
             return totalSum;
         }
 
