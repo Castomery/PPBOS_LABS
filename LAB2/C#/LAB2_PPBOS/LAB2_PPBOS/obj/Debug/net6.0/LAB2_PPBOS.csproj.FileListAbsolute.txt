@@ -1,0 +1,14 @@
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\bin\Debug\net6.0\LAB2_PPBOS.exe
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\bin\Debug\net6.0\LAB2_PPBOS.deps.json
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\bin\Debug\net6.0\LAB2_PPBOS.runtimeconfig.json
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\bin\Debug\net6.0\LAB2_PPBOS.dll
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\bin\Debug\net6.0\LAB2_PPBOS.pdb
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.AssemblyInfoInputs.cache
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.AssemblyInfo.cs
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.csproj.CoreCompileInputs.cache
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.dll
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\refint\LAB2_PPBOS.dll
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.pdb
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\LAB2_PPBOS.genruntimeconfig.cache
+C:\Інше\темп\Project\PPBOS_LABSs\LAB2\C#\LAB2_PPBOS\LAB2_PPBOS\obj\Debug\net6.0\ref\LAB2_PPBOS.dll

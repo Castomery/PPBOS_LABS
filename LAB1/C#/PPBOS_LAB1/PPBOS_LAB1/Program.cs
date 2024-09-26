@@ -5,7 +5,7 @@ namespace PPBOS_LAB1
     internal class Program
     {
         static int[] arr;
-        static int arrSize = 5000000;
+        static int arrSize = 500000;
         static int countOfThreads = 5;
         static void Main(string[] args)
         {

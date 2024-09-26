@@ -16,7 +16,7 @@ namespace PPBOS_LAB1
             this.arr = array;
         }
 
-        public long GetSumByThreads(int countOfThreads)
+        public int GetSumByThreads(int countOfThreads)
         {
             
             long totalSum = 0;
