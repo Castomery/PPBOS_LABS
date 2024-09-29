@@ -8,7 +8,7 @@ namespace LAB2_PPBOS
 {
     internal class Program
     {
-        static long[] array = new long[10000000];
+        static long[] array = new long[5000000];
         static int workerCount = 16;
         static Thread[] workers;
         static ConcurrentQueue<(int, int)> taskQueue;
