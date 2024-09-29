@@ -2,95 +2,118 @@ package org.example;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 
 public class Main {
-
-    private static int[] array;
-    private static int numberOfThreads;
-    private static final Object lock = new Object();
-    private static int currentLength;
-    private static int nextIndex = 0;
-    private static boolean finished = false;
+    static long[] array = new long[10000000];
+    static int workerCount = 8;
+    static Thread[] workers;
+    static ConcurrentLinkedQueue<int[]> taskQueue;
+    static int completedWorkers;
+    static final Object locker = new Object();
+    static volatile boolean workInProgress = true;
+    static int currentLength;
 
     public static void main(String[] args) {
-        array = new int[]{1, 2, 3, 4, 5, 6}; // Початковий масив
-        currentLength = array.length; // Визначення початкової довжини масиву
-        numberOfThreads = Runtime.getRuntime().availableProcessors(); // Кількість доступних ядер процесора
 
-        // Створення робочих потоків
-        Thread[] workers = new Thread[numberOfThreads];
-        for (int i = 0; i < numberOfThreads; i++) {
-            workers[i] = new Thread(new Worker());
+        for (int i = 0; i < array.length; i++) {
+            array[i] = i;
+        }
+
+        taskQueue = new ConcurrentLinkedQueue<>();
+        workers = new Thread[workerCount];
+
+        for (int i = 0; i < workerCount; i++) {
+            workers[i] = new Worker();
             workers[i].start();
         }
 
-        // Керуючий потік
-        Thread managerThread = new Thread(new Manager());
-        managerThread.start();
+        Thread controllerThread = new ControllerThread();
+        controllerThread.start();
 
-        // Чекаємо завершення всіх робочих потоків
+        try {
+            controllerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        workInProgress = false;
+
+        synchronized (locker) {
+            locker.notifyAll();
+        }
+
+        // Join all worker threads
         for (Thread worker : workers) {
             try {
                 worker.join();
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                e.printStackTrace();
             }
         }
 
-        // Завершуємо керуючий потік
-        finished = true;
-        synchronized (lock) {
-            lock.notifyAll();
-        }
-
-        // Виводимо фінальний результат
-        System.out.println("Сума елементів масиву: " + array[0]);
+        System.out.println("Final result: " + array[0]);
     }
 
-    static class Manager implements Runnable {
+    static class ControllerThread extends Thread {
         @Override
         public void run() {
+            currentLength = array.length;
+
             while (currentLength > 1) {
-                synchronized (lock) {
-                    nextIndex = 0; // Скидаємо індекс на початок
-                    while (nextIndex < currentLength / 2) {
-                        lock.notifyAll(); // Підказуємо робочим потокам, що є нові завдання
+                int halfLength = currentLength / 2;
+                completedWorkers = 0;
+
+                // Enqueue tasks
+                for (int i = 0; i < halfLength; i++) {
+                    int pairIndex = currentLength - 1 - i;
+                    taskQueue.add(new int[]{i, pairIndex});
+                }
+
+                synchronized (locker) {
+                    locker.notifyAll();
+                }
+
+                synchronized (locker) {
+                    while (completedWorkers < halfLength) {
                         try {
-                            lock.wait(); // Чекаємо завершення обробки
+                            locker.wait();
                         } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
+                            e.printStackTrace();
                         }
                     }
-                    // Зменшуємо довжину масиву для наступної хвилі
-                    currentLength = (currentLength + 1) / 2;
                 }
+
+                currentLength = halfLength + (currentLength % 2);
             }
         }
     }
 
-    static class Worker implements Runnable {
+    // Worker class to process the tasks
+    static class Worker extends Thread {
         @Override
         public void run() {
-            while (!finished || nextIndex < currentLength / 2) {
-                int index;
-                synchronized (lock) {
-                    // Перевіряємо, чи є ще індекси для обробки
-                    if (nextIndex < currentLength / 2) {
-                        index = nextIndex++;
-                    } else {
-                        break; // Немає більше завдань, виходимо
+            while (workInProgress) {
+                int[] task = taskQueue.poll();
+
+                if (task != null) {
+                    array[task[0]] += array[task[1]];
+
+                    synchronized (locker) {
+                        completedWorkers++;
+                        locker.notifyAll();
                     }
-                }
-
-                // Обчислення суми
-                int secondIndex = currentLength - 1 - index; // Обчислення симетричного індексу
-                int pairSum = array[index] + array[secondIndex];
-                array[index] = pairSum; // Зберігаємо результат у нижчий індекс
-
-                synchronized (lock) {
-                    lock.notify(); // Підказуємо керуючому потоку, що це завдання завершено
+                } else {
+                    synchronized (locker) {
+                        try {
+                            if (workInProgress && taskQueue.isEmpty()) {
+                                locker.wait();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }

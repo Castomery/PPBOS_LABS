@@ -8,8 +8,8 @@ namespace LAB2_PPBOS
 {
     internal class Program
     {
-        static long[] array = new long[1000000];
-        static int workerCount = Environment.ProcessorCount;
+        static long[] array = new long[10000000];
+        static int workerCount = 16;
         static Thread[] workers;
         static ConcurrentQueue<(int, int)> taskQueue;
         static int completedWorkers;
