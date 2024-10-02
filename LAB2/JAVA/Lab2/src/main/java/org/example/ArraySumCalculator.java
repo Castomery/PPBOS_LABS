@@ -1,119 +1,89 @@
 package org.example;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 public class ArraySumCalculator {
-    private long[] array;
-    int workerCount;
-    private Thread[] workers;
-    private ConcurrentLinkedQueue<int[]> taskQueue;
-    private int completedWorkers;
-    private final Object locker = new Object();
-    private boolean workInProgress = true;
+
+    private Worker[] _workers;
+    private boolean _isWorkInProcess;
+    private int[] _countOfCompletedWork;
+    private ControllerThread _controllerThread;
+
+    private int stopIndex;
     private int currentLength;
 
-    public ArraySumCalculator(int arraySize, int workerCount) {
-        this.array = new long[arraySize];
-        this.workerCount = workerCount;
-        for (int i = 0; i < array.length; i++) {
-            array[i] = i;
-        }
-        taskQueue = new ConcurrentLinkedQueue<>();
-        workers = new Worker[workerCount];
+    public void setWorkers(Worker[] workers)
+    {
+        _workers = workers;
+        _countOfCompletedWork = new int[_workers.length];
+        _isWorkInProcess = true;
     }
 
-    public void calculateSum() {
+    public void getSum(long[] array)
+    {
+        stopIndex = array.length;
 
-        for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this);
-            workers[i].start();
-        }
+        _controllerThread = new ControllerThread(this);
+        _controllerThread.start();
 
-        ControllerThread controllerThread = new ControllerThread(this);
-        controllerThread.start();
 
-        try {
-            controllerThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        while (stopIndex > 1)
+        {
 
-        workInProgress = false;
-
-        // Notify workers to stop
-        synchronized (locker) {
-            locker.notifyAll();
-        }
-
-        // Wait for all workers to finish
-        for (Thread worker : workers) {
-            try {
-                worker.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (int i = 0; i < _countOfCompletedWork.length; i++)
+            {
+                _countOfCompletedWork[i] = 0;
             }
+
+            currentLength = stopIndex;
+
+            stopIndex = stopIndex / 2 + stopIndex % 2;
+
+            for (int i = 0; i< stopIndex && i < _workers.length; i++)
+            {
+                _workers[i].SetTasks(i, _workers.length,true);
+            }
+
+            if (getCountOfCompletedWork() < stopIndex)
+            {
+                _controllerThread.IsSemaphoreWaiting = true;
+                _controllerThread.acquireCalculationSemaphore();
+            }
+
+
         }
 
-        // Print the final result
-        System.out.println("Final result: " + array[0]);
+        _isWorkInProcess = false;
+
+        for (int i = 0; i < _workers.length; i++)
+        {
+            _workers[i].StopWorker();
+        }
     }
 
-    public void sumArrayElements(int index1, int index2) {
-        array[index1] += array[index2];
+    public boolean getIsWorkInProcess(){
+        return _isWorkInProcess;
     }
 
-    public long[] getArray() {
-        return array;
+    public void increaseCountOfCompletedWork(int index)
+    {
+        _countOfCompletedWork[index]++;
     }
 
-    public void setArray(long[] array) {
-        this.array = array;
+    public int getCountOfCompletedWork(){
+        int countOfCompletedWork = 0;
+        for (int i = 0; i < _countOfCompletedWork.length; i++)
+        {
+            countOfCompletedWork += _countOfCompletedWork[i];
+        }
+        return countOfCompletedWork;
     }
 
-    public int getWorkerCount() {
-        return workerCount;
+    public int getStopIndex(){
+        return stopIndex;
     }
 
-    public void setWorkerCount(int workerCount) {
-        this.workerCount = workerCount;
-    }
-
-    public ConcurrentLinkedQueue<int[]> getTaskQueue() {
-        return taskQueue;
-    }
-
-    public void setTaskQueue(ConcurrentLinkedQueue<int[]> taskQueue) {
-        this.taskQueue = taskQueue;
-    }
-
-    public int getCompletedWorkers() {
-        return completedWorkers;
-    }
-
-    public void setCompletedWorkers(int count) {
-        this.completedWorkers = count;
-    }
-
-    public void incrementCompletedWorkers() {
-        this.completedWorkers++;
-    }
-
-    public Object getLocker() {
-        return locker;
-    }
-
-    public boolean isWorkInProgress() {
-        return workInProgress;
-    }
-
-    public void setWorkInProgress(boolean workInProgress) {
-        this.workInProgress = workInProgress;
-    }
-
-    public int getCurrentLength() {
+    public int getCurrentLength(){
         return currentLength;
-    }
-
-    public void setCurrentLength(int currentLength) {
-        this.currentLength = currentLength;
     }
 }

@@ -1,39 +1,71 @@
 package org.example;
 
+import java.util.concurrent.Semaphore;
+
 public class Worker extends Thread{
 
-    private final ArraySumCalculator calculator;
+    private long[] _array;
+    private ArraySumCalculator _calculator;
+    private boolean _isWorking = false;
+    private Semaphore _isWorkingSemaphore = new Semaphore(0);
+    private int _threadIndex;
+    private int _startIndex;
+    private int _step;
 
-    public Worker(ArraySumCalculator calculator) {
-        this.calculator = calculator;
+    public Worker( long[] array, ArraySumCalculator calculator, int threadIndex)
+    {
+        _array = array;
+        _calculator = calculator;
+        _threadIndex = threadIndex;
+    }
+
+    public void SetTasks(int startIndex, int step,boolean isWorking)
+    {
+        _startIndex = startIndex;
+        _step = step;
+        _isWorking = isWorking;
+
+        if (_isWorking)
+        {
+            _isWorkingSemaphore.release();
+        }
     }
 
     @Override
-    public void run() {
-        while (calculator.isWorkInProgress()) {
-            // Retrieve a task from the queue
-            int[] task = calculator.getTaskQueue().poll();
-            if (task != null) {
-                // Process the task by summing the values
-                calculator.sumArrayElements(task[0],task[1]);
+    public void run()
+    {
+        while (true)
+        {
+            try {
+                _isWorkingSemaphore.acquire();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-                // Increment completed worker count and notify controller
-                synchronized (calculator.getLocker()) {
-                    calculator.incrementCompletedWorkers();
-                    notifyAll();
+            if (!_isWorking)
+            {
+                break;
+            }
+
+            for (int i = _startIndex; i < _calculator.getStopIndex(); i+=_step)
+            {
+                int pairIndex = _calculator.getCurrentLength() - i - 1;
+
+                if (i == pairIndex)
+                {
+                    _calculator.increaseCountOfCompletedWork(_threadIndex);
+                    continue;
                 }
-            } else {
-                // If no task is available, wait for a new task
-                synchronized (calculator.getLocker()) {
-                    try {
-                        if (calculator.isWorkInProgress() && calculator.getTaskQueue().isEmpty()) {
-                            wait();
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+
+                _array[i] += _array[pairIndex];
+                _calculator.increaseCountOfCompletedWork(_threadIndex);
             }
         }
+    }
+
+    public void StopWorker()
+    {
+        _isWorking = false;
+        _isWorkingSemaphore.release();
     }
 }

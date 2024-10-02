@@ -1,43 +1,40 @@
 package org.example;
 
-public class ControllerThread extends Thread{
-    private final ArraySumCalculator calculator;
+import java.util.concurrent.Semaphore;
 
-    public ControllerThread(ArraySumCalculator calculator) {
-        this.calculator = calculator;
+public class ControllerThread extends Thread{
+    public Boolean IsSemaphoreWaiting;
+    private ArraySumCalculator _calculator;
+    private Semaphore _calculationSemaphore;
+
+    public ControllerThread(ArraySumCalculator calculator)
+    {
+        _calculator = calculator;
+        _calculationSemaphore = new Semaphore(0);
+    }
+
+    public void acquireCalculationSemaphore()
+    {
+        try {
+            _calculationSemaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void run() {
-        calculator.setCurrentLength(calculator.getArray().length);
-
-        while (calculator.getCurrentLength() > 1) {
-            int halfLength = calculator.getCurrentLength() / 2;
-            calculator.setCompletedWorkers(0);
-
-            // Add tasks to the queue
-            for (int i = 0; i < halfLength; i++) {
-                int[] task = {i, calculator.getCurrentLength() - 1 - i};
-                calculator.getTaskQueue().add(task);
-            }
-
-            // Notify workers to start working
-            synchronized (calculator.getLocker()) {
-                calculator.getLocker().notifyAll();
-            }
-
-            // Wait for workers to complete their tasks
-            synchronized (calculator.getLocker()) {
-                while (calculator.getCompletedWorkers() < halfLength) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    public void run()
+    {
+        while(_calculator.getIsWorkInProcess())
+        {
+            if (_calculator.getCountOfCompletedWork() >= _calculator.getStopIndex())
+            {
+                if(IsSemaphoreWaiting)
+                {
+                    IsSemaphoreWaiting = false;
+                    _calculationSemaphore.release();
                 }
             }
-
-            calculator.setCurrentLength(halfLength + (calculator.getCurrentLength() % 2));
         }
     }
 }
