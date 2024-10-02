@@ -12,6 +12,9 @@ public class Main {
     public static void main(String[] args) {
 
         ArraySumCalculator calculator = new ArraySumCalculator(arrayLength, workerCount);
+        long startTime = System.currentTimeMillis();
         calculator.calculateSum();
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time: " +estimatedTime);
     }
 }

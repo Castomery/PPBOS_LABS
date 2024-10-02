@@ -30,7 +30,7 @@ public class ControllerThread extends Thread{
             synchronized (calculator.getLocker()) {
                 while (calculator.getCompletedWorkers() < halfLength) {
                     try {
-                        calculator.getLocker().wait();
+                        wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

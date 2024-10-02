@@ -20,14 +20,14 @@ public class Worker extends Thread{
                 // Increment completed worker count and notify controller
                 synchronized (calculator.getLocker()) {
                     calculator.incrementCompletedWorkers();
-                    calculator.getLocker().notifyAll();
+                    notifyAll();
                 }
             } else {
                 // If no task is available, wait for a new task
                 synchronized (calculator.getLocker()) {
                     try {
                         if (calculator.isWorkInProgress() && calculator.getTaskQueue().isEmpty()) {
-                            calculator.getLocker().wait();
+                            wait();
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
