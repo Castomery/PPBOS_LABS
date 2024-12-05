@@ -9,18 +9,18 @@ namespace LAB2_PPBOS
     {
         static void Main()
         {
-            int size = 50000000;
+            int size = 15;
             long[] array = new long[size];
 
             for (int i = 0; i < size; i++)
             {
-                array[i] = i;
+                array[i] = i+1;
             }
 
             Stopwatch stopwatch = new Stopwatch();
             
 
-            int workerCount = 4;
+            int workerCount = 10;
 
             Calculator calculator = new Calculator();
 

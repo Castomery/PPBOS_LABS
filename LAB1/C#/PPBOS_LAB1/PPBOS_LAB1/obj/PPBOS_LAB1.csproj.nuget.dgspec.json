@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Інше\\темп\\Project\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj": {}
+    "C:\\Інше\\темп\\Project\\PPBOS_LABSs\\LAB1\\C#\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj": {}
   },
   "projects": {
-    "C:\\Інше\\темп\\Project\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj": {
+    "C:\\Інше\\темп\\Project\\PPBOS_LABSs\\LAB1\\C#\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Інше\\темп\\Project\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj",
+        "projectUniqueName": "C:\\Інше\\темп\\Project\\PPBOS_LABSs\\LAB1\\C#\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj",
         "projectName": "PPBOS_LAB1",
-        "projectPath": "C:\\Інше\\темп\\Project\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj",
+        "projectPath": "C:\\Інше\\темп\\Project\\PPBOS_LABSs\\LAB1\\C#\\PPBOS_LAB1\\PPBOS_LAB1\\PPBOS_LAB1.csproj",
         "packagesPath": "C:\\Users\\vladp\\.nuget\\packages\\",
-        "outputPath": "C:\\Інше\\темп\\Project\\PPBOS_LAB1\\PPBOS_LAB1\\obj\\",
+        "outputPath": "C:\\Інше\\темп\\Project\\PPBOS_LABSs\\LAB1\\C#\\PPBOS_LAB1\\PPBOS_LAB1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\vladp\\AppData\\Roaming\\NuGet\\NuGet.Config",
